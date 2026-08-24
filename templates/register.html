@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>회원가입 - 신우철의 Todo</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, "Noto Sans KR", sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(circle at 20% 20%, #312e81, transparent 35%),
+                radial-gradient(circle at 80% 80%, #164e63, transparent 35%),
+                #020617;
+        }
+
+        .box {
+            width: 420px;
+            max-width: 90%;
+
+            padding: 40px;
+
+            border-radius: 25px;
+
+            background: rgba(15,23,42,0.92);
+
+            border: 1px solid rgba(255,255,255,0.1);
+
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+        }
+
+        .icon {
+            text-align: center;
+
+            font-size: 50px;
+
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+
+            margin: 0;
+
+            font-size: 28px;
+        }
+
+        .description {
+            text-align: center;
+
+            color: #94a3b8;
+
+            margin: 10px 0 30px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 15px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #1e293b;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #0f172a;
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(135deg, #6366f1, #06b6d4);
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .error {
+            padding: 12px;
+
+            margin-bottom: 18px;
+
+            border-radius: 10px;
+
+            background: rgba(239,68,68,0.1);
+
+            color: #f87171;
+
+            text-align: center;
+        }
+
+        .login {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #64748b;
+        }
+
+        .login a {
+            color: #818cf8;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <div class="icon">
+        ✨
+    </div>
+
+    <h1>
+        회원가입
+    </h1>
+
+    <div class="description">
+        신우철의 Todo를 시작해보세요
+    </div>
+
+    {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+    <form action="/register" method="post">
+
+        <label>
+            아이디
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="아이디를 입력하세요"
+            required
+        >
+
+        <label>
+            비밀번호
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="비밀번호를 입력하세요"
+            required
+        >
+
+        <label>
+            비밀번호 확인
+        </label>
+
+        <input
+            type="password"
+            name="password_confirm"
+            placeholder="비밀번호를 다시 입력하세요"
+            required
+        >
+
+        <button type="submit">
+            회원가입
+        </button>
+
+    </form>
+
+    <div class="login">
+
+        이미 계정이 있으신가요?
+
+        <a href="/login">
+            로그인
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

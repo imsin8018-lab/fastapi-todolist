@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Todo 리스트</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        "Noto Sans KR",
+        sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            #312e81,
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            #164e63,
+            transparent 35%
+        ),
+        #020617;
+}
+
+.container {
+    width: 760px;
+    max-width: 92%;
+
+    margin: 50px auto 100px;
+}
+
+
+/* 상단 */
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.username {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.logout {
+    padding: 9px 15px;
+
+    border-radius: 10px;
+
+    background: rgba(239,68,68,0.12);
+
+    border:
+        1px solid
+        rgba(248,113,113,0.2);
+
+    color: #f87171;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.logout:hover {
+    background: rgba(239,68,68,0.25);
+}
+
+
+/* 제목 */
+
+.title {
+    margin-bottom: 25px;
+}
+
+.title h1 {
+    margin: 0 0 8px;
+
+    font-size: 42px;
+}
+
+.title p {
+    margin: 0;
+
+    color: #94a3b8;
+}
+
+
+/* 통계 */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+.stat {
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.label {
+    margin-top: 5px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+
+/* 진행률 */
+
+.progress-box {
+    padding: 22px;
+
+    margin-bottom: 22px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+}
+
+.progress-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+}
+
+.progress-text {
+    color: #cbd5e1;
+}
+
+.percent {
+    font-weight: bold;
+}
+
+.bar {
+    width: 100%;
+    height: 10px;
+
+    background: #1e293b;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.fill {
+    width: {{ progress }}%;
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6366f1,
+            #06b6d4
+        );
+
+    transition: width 0.5s ease;
+}
+
+
+/* 추가 */
+
+.add-form {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+.add-input {
+    flex: 1;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        #1e293b;
+
+    border-radius: 14px;
+
+    outline: none;
+
+    background: #0f172a;
+
+    color: white;
+
+    font-size: 15px;
+}
+
+.add-button {
+    padding: 0 23px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #06b6d4
+        );
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* Todo */
+
+.todo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 17px;
+
+    margin-bottom: 12px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255,255,255,0.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+}
+
+.check-form {
+    margin: 0;
+}
+
+.check {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        #6366f1;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.done .check {
+    background: #6366f1;
+}
+
+.todo-title {
+    flex: 1;
+
+    font-size: 16px;
+}
+
+.done .todo-title {
+    color: #64748b;
+
+    text-decoration: line-through;
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+}
+
+.action {
+    padding: 7px 9px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color: #cbd5e1;
+
+    cursor: pointer;
+}
+
+.delete {
+    color: #f87171;
+}
+
+
+/* 빈 화면 */
+
+.empty {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color: #64748b;
+}
+
+
+/* ==================================
+   100% 축하 애니메이션
+================================== */
+
+.celebration {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    width: 380px;
+    max-width: 90%;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 25px;
+
+    background:
+        rgba(15,23,42,0.97);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,0.7);
+
+    z-index: 9999;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.5);
+}
+
+.celebration.show {
+    animation:
+        celebrationPop
+        0.7s ease
+        forwards;
+}
+
+.celebration-icon {
+    font-size: 65px;
+
+    animation:
+        bounce
+        0.8s infinite alternate;
+}
+
+.celebration-title {
+    margin-top: 10px;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+.celebration-text {
+    margin-top: 10px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+
+@keyframes celebrationPop {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            scale(0.4);
+    }
+
+    70% {
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+}
+
+
+@keyframes bounce {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .top {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .title h1 {
+        font-size: 32px;
+    }
+
+    .add-form {
+        flex-direction: column;
+    }
+
+    .add-button {
+        padding: 14px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="top">
+
+        <div class="logo">
+            📝 Todo 리스트
+        </div>
+
+        <div class="user-area">
+
+            <span class="username">
+                👤 {{ username }}
+            </span>
+
+            <a
+                href="/logout"
+                class="logout"
+            >
+                로그아웃
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="title">
+
+        <h1>
+            오늘의 할 일
+        </h1>
+
+        <p>
+            하나씩 완료하면서 오늘을 정리해보세요.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="number">
+                {{ total }}
+            </div>
+
+            <div class="label">
+                전체 할 일
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="number">
+                {{ completed }}
+            </div>
+
+            <div class="label">
+                완료
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="number">
+                {{ remaining }}
+            </div>
+
+            <div class="label">
+                남은 할 일
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="progress-box">
+
+        <div class="progress-top">
+
+            <span class="progress-text">
+                오늘의 진행률
+            </span>
+
+            <span class="percent">
+                {{ progress }}%
+            </span>
+
+        </div>
+
+        <div class="bar">
+
+            <div class="fill"></div>
+
+        </div>
+
+    </div>
+
+
+    <form
+        class="add-form"
+        action="/add"
+        method="post"
+    >
+
+        <input
+            class="add-input"
+            type="text"
+            name="title"
+            placeholder="새로운 할 일을 입력하세요..."
+            required
+        >
+
+        <button
+            class="add-button"
+            type="submit"
+        >
+            ＋ 추가
+        </button>
+
+    </form>
+
+
+    {% if todos %}
+
+        {% for todo in todos %}
+
+            <div
+                class="todo {% if todo['done'] %}done{% endif %}"
+            >
+
+                <form
+                    class="check-form"
+                    action="/toggle/{{ todo['id'] }}"
+                    method="post"
+                >
+
+                    <button
+                        class="check"
+                        type="submit"
+                    >
+                        {% if todo['done'] %}
+                            ✓
+                        {% endif %}
+                    </button>
+
+                </form>
+
+
+                <div class="todo-title">
+
+                    {{ todo['title'] }}
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button
+                        class="action"
+                        type="button"
+                        onclick='editTodo(
+                            {{ todo["id"] }},
+                            {{ todo["title"]|tojson }}
+                        )'
+                    >
+                        ✏️
+                    </button>
+
+
+                    <form
+                        action="/delete/{{ todo['id'] }}"
+                        method="post"
+                    >
+
+                        <button
+                            class="action delete"
+                            type="submit"
+                        >
+                            🗑️
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+
+            🎉 아직 할 일이 없습니다.
+
+            <br><br>
+
+            위에서 새로운 할 일을 추가해보세요.
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+
+<!-- ==============================
+     100% 축하창
+================================ -->
+
+<div
+    id="celebration"
+    class="celebration"
+>
+
+    <div class="celebration-icon">
+        🎉
+    </div>
+
+    <div class="celebration-title">
+        모든 할 일을 완료했습니다!
+    </div>
+
+    <div class="celebration-text">
+        오늘도 완벽하게 해냈어요!
+    </div>
+
+</div>
+
+
+<!-- 수정 -->
+
+<form
+    id="editForm"
+    method="post"
+    style="display:none;"
+>
+
+    <input
+        id="editInput"
+        type="text"
+        name="title"
+    >
+
+</form>
+
+
+<script>
+
+
+/* ==============================
+   수정
+================================ */
+
+function editTodo(id, title) {
+
+    const newTitle = prompt(
+        "할 일을 수정하세요.",
+        title
+    );
+
+    if (newTitle === null) {
+        return;
+    }
+
+    if (newTitle.trim() === "") {
+        return;
+    }
+
+    const form =
+        document.getElementById("editForm");
+
+    const input =
+        document.getElementById("editInput");
+
+    form.action =
+        "/edit/" + id;
+
+    input.value =
+        newTitle;
+
+    form.submit();
+}
+
+
+/* ==============================
+   100% 달성 애니메이션
+================================ */
+
+const progress = {{ progress }};
+
+const previousProgress =
+    Number(
+        sessionStorage.getItem(
+            "previousProgress"
+        ) || 0
+    );
+
+
+if (
+    progress === 100 &&
+    previousProgress < 100
+) {
+
+    const celebration =
+        document.getElementById(
+            "celebration"
+        );
+
+    celebration.classList.add("show");
+
+
+    setTimeout(function() {
+
+        celebration.classList.remove(
+            "show"
+        );
+
+    }, 3000);
+}
+
+
+sessionStorage.setItem(
+    "previousProgress",
+    progress
+);
+
+
+/* ==============================
+   다시 Todo를 추가하면
+   다음 100% 달성 때 다시 작동
+================================ */
+
+if (progress < 100) {
+
+    sessionStorage.removeItem(
+        "previousProgress"
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
